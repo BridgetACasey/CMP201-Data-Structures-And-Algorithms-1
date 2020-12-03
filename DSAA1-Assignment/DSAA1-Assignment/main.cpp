@@ -2,24 +2,30 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Grid.h"
+
 #include "Lee.h"
 
 int main()
 {
 	srand((unsigned)time(0));
 
+	Grid grid;
+
 	Lee lee;
 
-	lee.initGrid();
+	lee.setGrid(&grid);
 
-	lee.floodGrid();
-	lee.displayGrid();
+	grid.populate();
 
-	lee.tracePath();
-	lee.printPathCoords();
+	lee.flood();
+	grid.render();
+	lee.trace();
 
 	lee.setPathOnGrid();
-	lee.displayGrid();
+	lee.printPathCoords();
+
+	grid.render();
 
 	/*sf::RenderWindow window(sf::VideoMode(1600, 900), "Data Structures and Algorithms 1", sf::Style::Titlebar | sf::Style::Close);
 

@@ -9,6 +9,8 @@ bool operator==(const Coord& lhs, const Coord& rhs)
 
 Lee::Lee()
 {
+	grid = nullptr;
+
 	startCoord.x = 1;
 	startCoord.y = 1;
 
@@ -21,96 +23,65 @@ Lee::~Lee()
 
 }
 
-void Lee::initGrid()
+void Lee::setGrid(Grid* gd)
 {
-	int passMark = 25;
-
-	for (int y = 0; y < HEIGHT; ++y)
-	{
-		for (int x = 0; x < WIDTH; ++x)
-		{
-			int chance = 1 + (rand() % 100);
-
-			if (chance <= passMark)
-			{
-				grid[y][x] = -2;
-			}
-			
-			else
-			{
-				grid[y][x] = -1;
-			}
-		}
-	}
+	grid = gd;
 }
 
-void Lee::displayGrid()
+void Lee::flood()
 {
-	for (int y = 0; y < HEIGHT; ++y)
-	{
-		for (int x = 0; x < WIDTH; ++x)
-		{
-			std::cout << grid[y][x] << "	";
-		}
-
-		std::cout << std::endl;
-	}
-}
-
-void Lee::floodGrid()
-{
-	int searchCount = 0;
+	int distance = 0;
 	int cellsUpdated = 0;
 
 	bool searching = true;
 
-	grid[startCoord.y][startCoord.x] = 0;
+	grid->setFlag(startCoord.x, startCoord.y, 0);
 
 	while (searching)
 	{
-		for (int y = 0; y < HEIGHT; ++y)
+		for (int y = 0; y < grid->getGridHeight(); ++y)
 		{
-			for (int x = 0; x < WIDTH; ++x)
+			for (int x = 0; x < grid->getGridWidth(); ++x)
 			{
-				if (grid[y][x] == searchCount)
+				if (grid->getFlag(x, y) == distance)
 				{
 					if (x == endCoord.x && y == endCoord.y)
 					{
 						searching = false;
 					}
 
-					if (y != HEIGHT - 1)
+					if (y != grid->getGridHeight() - 1)
 					{
-						if (grid[y + 1][x] == -1)
+						if (grid->getFlag(x, y + 1) == -1)
 						{
-							grid[y + 1][x] = searchCount + 1;
+							grid->setFlag(x, y + 1, distance + 1);
 							++cellsUpdated;
 						}
 					}
 
-					if (x != WIDTH - 1)
+					if (x != grid->getGridWidth() - 1)
 					{
-						if (grid[y][x + 1] == -1)
+						if (grid->getFlag(x + 1, y) == -1)
 						{
-							grid[y][x + 1] = searchCount + 1;
+							grid->setFlag(x + 1, y, distance + 1);
 							++cellsUpdated;
 						}
 					}
 
 					if (y != 0)
 					{
-						if (grid[y - 1][x] == -1)
+						if (grid->getFlag(x, y - 1) == -1)
 						{
-							grid[y - 1][x] = searchCount + 1;
+							grid->setFlag(x, y - 1, distance + 1);
 							++cellsUpdated;
 						}
 					}
 
 					if (x != 0)
 					{
-						if (grid[y][x - 1] == -1)
+						if (grid->getFlag(x - 1, y) == -1)
 						{
-							grid[y][x - 1] = searchCount + 1;
+							grid->setFlag(x - 1, y, distance + 1);
 							++cellsUpdated;
 						}
 					}
@@ -124,41 +95,41 @@ void Lee::floodGrid()
 		}
 
 		cellsUpdated = 0;
-		++searchCount;
+		++distance;
 	}
 }
 
-void Lee::tracePath()
+void Lee::trace()
 {
 	Coord currentCoord = endCoord;
 	Coord nextCoord = currentCoord;
 
-	int cellValue = HEIGHT + WIDTH;	//Max possible value
+	int cellValue = grid->getGridHeight() + grid->getGridWidth();	//Max possible value
 
 	while (true)
 	{
-		for (int y = 0; y < HEIGHT; ++y)
+		for (int y = 0; y < grid->getGridHeight(); ++y)
 		{
-			for (int x = 0; x < WIDTH; ++x)
+			for (int x = 0; x < grid->getGridWidth(); ++x)
 			{
 				if (currentCoord.y == y && currentCoord.x == x)
 				{
-					if (y != HEIGHT - 1)
+					if (y != grid->getGridHeight() - 1)
 					{
-						if (grid[y + 1][x] < cellValue && grid[y + 1][x] >= 0)
+						if (grid->getFlag(x, y + 1) < cellValue && grid->getFlag(x, y + 1) >= 0)
 						{
-							cellValue = grid[y + 1][x];
+							cellValue = grid->getFlag(x, y + 1);
 
 							nextCoord.x = x;
 							nextCoord.y = y + 1;
 						}
 					}
 
-					if (x != WIDTH - 1)
+					if (x != grid->getGridWidth() - 1)
 					{
-						if (grid[y][x + 1] < cellValue && grid[y][x + 1] >= 0)
+						if (grid->getFlag(x + 1, y) < cellValue && grid->getFlag(x + 1, y) >= 0)
 						{
-							cellValue = grid[y][x + 1];
+							cellValue = grid->getFlag(x + 1, y);
 
 							nextCoord.x = x + 1;
 							nextCoord.y = y;
@@ -167,9 +138,9 @@ void Lee::tracePath()
 
 					if (y != 0)
 					{
-						if (grid[y - 1][x] < cellValue && grid[y - 1][x] >= 0)
+						if (grid->getFlag(x, y - 1) < cellValue && grid->getFlag(x, y - 1) >= 0)
 						{
-							cellValue = grid[y - 1][x];
+							cellValue = grid->getFlag(x, y - 1);
 
 							nextCoord.x = x;
 							nextCoord.y = y - 1;
@@ -178,9 +149,9 @@ void Lee::tracePath()
 
 					if (x != 0)
 					{
-						if (grid[y][x - 1] < cellValue && grid[y][x - 1] >= 0)
+						if (grid->getFlag(x - 1, y) < cellValue && grid->getFlag(x - 1, y) >= 0)
 						{
-							cellValue = grid[y][x - 1];
+							cellValue = grid->getFlag(x - 1, y);
 
 							nextCoord.x = x - 1;
 							nextCoord.y = y;
@@ -205,10 +176,10 @@ void Lee::setPathOnGrid()
 {
 	for (Coord cell : path)
 	{
-		grid[cell.y][cell.x] = -4;
+		grid->setFlag(cell.x, cell.y, -4);
 	}
 
-	grid[endCoord.y][endCoord.x] = -5;
+	grid->setFlag(endCoord.x, endCoord.y, -5);
 }
 
 void Lee::printPathCoords()
