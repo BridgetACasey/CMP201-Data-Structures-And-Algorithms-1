@@ -2,25 +2,8 @@
 
 #pragma once
 
-#include <iostream>
-#include <list>
-
 #include "Grid.h"
-
-struct Coord
-{
-	int x;
-	int y;
-};
-
-struct Vertex
-{
-	std::string name;
-	bool blocked;
-	int distance;	// -1 if not filled in yet
-	std::list<Vertex *>neighbours;
-	Vertex(std::string name_): name(name_), blocked(false), distance(-1) {}
-};
+#include "Graph.h"
 
 class Lee
 {
@@ -37,10 +20,10 @@ public:
 	void printPathCoords();
 
 private:
-	Coord startCoord;
-	Coord endCoord;
+	Coordinate startCoord;
+	Coordinate endCoord;
 
-	std::list<Coord> path;
+	std::list<Coordinate> path;
 
 	Grid* grid;
 };

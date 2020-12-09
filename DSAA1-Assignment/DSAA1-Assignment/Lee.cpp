@@ -2,7 +2,7 @@
 
 #include "Lee.h"
 
-bool operator==(const Coord& lhs, const Coord& rhs)
+bool operator==(const Coordinate& lhs, const Coordinate& rhs)
 {
 	return (lhs.x == rhs.x && lhs.y == rhs.y);
 }
@@ -101,8 +101,8 @@ void Lee::flood()
 
 void Lee::trace()
 {
-	Coord currentCoord = endCoord;
-	Coord nextCoord = currentCoord;
+	Coordinate currentCoord = endCoord;
+	Coordinate nextCoord = currentCoord;
 
 	int cellValue = grid->getGridHeight() + grid->getGridWidth();	//Max possible value
 
@@ -174,7 +174,7 @@ void Lee::trace()
 
 void Lee::setPathOnGrid()
 {
-	for (Coord cell : path)
+	for (Coordinate cell : path)
 	{
 		grid->setFlag(cell.x, cell.y, -4);
 	}
@@ -186,7 +186,7 @@ void Lee::printPathCoords()
 {
 	std::cout << std::endl;
 
-	for (Coord cell : path)
+	for (Coordinate cell : path)
 	{
 		std::cout << "Coord: " << cell.x << "	" << cell.y << std::endl;
 	}

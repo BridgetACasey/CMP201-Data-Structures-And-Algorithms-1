@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Grid.h"
+#include "Graph.h"
 
 #include "Lee.h"
 
@@ -11,9 +12,13 @@ int main()
 	srand((unsigned)time(0));
 
 	Grid grid;
+	Graph graph;
 
 	Lee lee;
 
+	graph.test();
+
+	/*
 	lee.setGrid(&grid);
 
 	grid.populate();
@@ -26,7 +31,7 @@ int main()
 	lee.printPathCoords();
 
 	grid.render();
-
+*/
 	/*sf::RenderWindow window(sf::VideoMode(1600, 900), "Data Structures and Algorithms 1", sf::Style::Titlebar | sf::Style::Close);
 
 	sf::Event event;
