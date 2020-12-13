@@ -1,11 +1,12 @@
 //@BridgetACasey
-
+#include "pch.h"
 #include <SFML/Graphics.hpp>
 
 #include "Grid.h"
 #include "Graph.h"
 
 #include "Lee.h"
+#include "Dijkstra.h"
 
 int main()
 {
@@ -15,23 +16,17 @@ int main()
 	Graph graph;
 
 	Lee lee;
+	Dijkstra dijkstra;
 
-	graph.test();
-
-	/*
-	lee.setGrid(&grid);
+	dijkstra.setGrid(&grid);
 
 	grid.populate();
 
-	lee.flood();
-	grid.render();
-	lee.trace();
+	dijkstra.flood();
+	dijkstra.trace();
 
-	lee.setPathOnGrid();
-	lee.printPathCoords();
+	grid.renderNodeGrid();
 
-	grid.render();
-*/
 	/*sf::RenderWindow window(sf::VideoMode(1600, 900), "Data Structures and Algorithms 1", sf::Style::Titlebar | sf::Style::Close);
 
 	sf::Event event;
