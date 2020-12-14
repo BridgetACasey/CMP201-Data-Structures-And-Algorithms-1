@@ -7,6 +7,7 @@
 
 #include "Lee.h"
 #include "Dijkstra.h"
+#include "AStar.h"
 
 int main()
 {
@@ -17,13 +18,15 @@ int main()
 
 	Lee lee;
 	Dijkstra dijkstra;
+	AStar astar;
 
 	dijkstra.setGrid(&grid);
+	astar.setGrid(&grid);
 
 	grid.populate();
 
-	dijkstra.flood();
-	dijkstra.trace();
+	astar.flood();
+	astar.trace();
 
 	grid.renderNodeGrid();
 

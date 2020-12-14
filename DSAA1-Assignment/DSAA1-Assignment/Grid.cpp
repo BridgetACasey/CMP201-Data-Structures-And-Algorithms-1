@@ -16,7 +16,7 @@ void Grid::populate()
 {
 	populateNodeArray();
 
-	int obstacleChance = 25;
+	int obstacleChance = 5;
 
 	for (int y = 0; y < HEIGHT; ++y)
 	{

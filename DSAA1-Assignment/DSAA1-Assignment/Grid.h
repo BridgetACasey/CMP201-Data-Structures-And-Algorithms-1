@@ -19,8 +19,12 @@ struct Node
 {
 	bool visited = false;
 
-	int cost = 1 + (rand() % 10);
+	int cost = 1;
 	int distance = -1;
+
+	int f = 0;	//Sum of g and h, which is an estimate of total path length
+	int g = 0;	//Accumulated cost from start node to current node
+	int h = 0;	//Estimated cost from current node to end node
 
 	Coordinate coordinate = {0, 0};
 
@@ -53,11 +57,10 @@ public:
 	Node** getNodeGrid();
 
 private:
-	static const int WIDTH = 16;
-	static const int HEIGHT = 16;
+	static const int WIDTH = 12;
+	static const int HEIGHT = 12;
 
 	Cell cellGrid[HEIGHT][WIDTH] = {};
-	//Node nodeGrid[HEIGHT][WIDTH] = {};
 
 	Node** nodeGrid;
 };
