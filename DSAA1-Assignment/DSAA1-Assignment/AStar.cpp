@@ -26,20 +26,18 @@ void AStar::flood()
 	startNode = &grid->getNodeGrid()[0][0];
 	endNode = &grid->getNodeGrid()[11][11];
 
-	Node* currentNode = nullptr;
+	Node* currentNode = startNode;
 
 	bool found = false;
 
 	startNode->distance = 0;
 	startNode->g = 0;
-	startNode->f = startNode->g + distanceBetween(startNode->coordinate, endNode->coordinate);
+	startNode->f = startNode->g + distanceBetween(startNode->coordinate, endNode->coordinate) + 1;	//Adding 1, otherwise f value is the same as its neighbours and it never gets added to the closed set
 
-	openSet.insert(startNode);
+	openSet.insert(currentNode);
 
 	while (!openSet.empty())
 	{
-		currentNode = *openSet.begin();
-
 		if (currentNode == endNode)
 		{
 			found = true;
@@ -48,19 +46,21 @@ void AStar::flood()
 			break;
 		}
 
+		currentNode = *openSet.begin();
+
 		closedSet.insert(currentNode);
 		openSet.erase(currentNode);
 
 		for (Node* neighbour : currentNode->neighbours)
 		{
+			neighbour->parent = currentNode;
+
 			std::set<Node*>::iterator nodeExists = closedSet.find(neighbour);	//Check if the node is on the closed set already
 
  			if (nodeExists == closedSet.end())
 			{
 				if (neighbour->distance != -2)
 				{
-					neighbour->parent = currentNode;
-
 					neighbour->h = distanceBetween(neighbour->coordinate, endNode->coordinate);
 					neighbour->g = neighbour->g + distanceBetween(neighbour->coordinate, neighbour->parent->coordinate);
 					neighbour->f = neighbour->g + neighbour->h;
@@ -79,6 +79,8 @@ void AStar::trace()
 	for (Node* current : closedSet)
 	{
 		path.push_back(current->coordinate);
+
+		current->distance = -4;
 
 		current = current->parent;
 	}
