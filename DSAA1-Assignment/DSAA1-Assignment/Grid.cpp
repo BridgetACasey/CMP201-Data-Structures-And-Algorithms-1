@@ -1,4 +1,5 @@
 //@BridgetACasey
+
 #include "pch.h"
 #include "Grid.h"
 
@@ -29,8 +30,7 @@ void Grid::populate()
 
 			if (chance <= obstacleChance)
 			{
-				cellGrid[y][x].distance = -2;
-				nodeGrid[y][x].distance = -2;
+				nodeGrid[y][x].distance = (float)-2;
 			}
 		}
 	}
@@ -63,6 +63,29 @@ void Grid::setNodeNeighbours()
 			{
 				nodeGrid[y][x].neighbours.push_back(&nodeGrid[y][x - 1]);
 			}
+
+			if (eightDirections)
+			{
+				if (y != 0 && x != 0)
+				{
+					nodeGrid[y][x].neighbours.push_back(&nodeGrid[y - 1][x - 1]);
+				}
+
+				if (y != 0 && x != WIDTH - 1)
+				{
+					nodeGrid[y][x].neighbours.push_back(&nodeGrid[y - 1][x + 1]);
+				}
+
+				if (y != HEIGHT - 1 && x != WIDTH - 1)
+				{
+					nodeGrid[y][x].neighbours.push_back(&nodeGrid[y + 1][x + 1]);
+				}
+
+				if (y != HEIGHT - 1 && x != 0)
+				{
+					nodeGrid[y][x].neighbours.push_back(&nodeGrid[y + 1][x - 1]);
+				}
+			}
 		}
 	}
 }
@@ -74,19 +97,6 @@ void Grid::populateNodeArray()
 	for (int i = 0; i < 16; ++i)
 	{
 		nodeGrid[i] = new Node[16];
-	}
-}
-
-void Grid::renderCellGrid()
-{
-	for (int y = 0; y < HEIGHT; ++y)
-	{
-		for (int x = 0; x < WIDTH; ++x)
-		{
-			std::cout << cellGrid[y][x].distance << "	";
-		}
-
-		std::cout << std::endl;
 	}
 }
 
@@ -103,6 +113,24 @@ void Grid::renderNodeGrid()
 	}
 }
 
+void Grid::setEightDirections(bool directions)
+{
+	eightDirections = directions;
+}
+
+float Grid::calculateManhattan(Coordinate one, Coordinate two)
+{
+	return(abs(two.x - one.x) + abs(two.y - one.y));
+}
+
+float Grid::calculateEuclidean(Coordinate one, Coordinate two)
+{
+	float x2 = abs((float)two.x - (float)one.x) * abs((float)two.x - (float)one.x);
+	float y2 = abs((float)two.y - (float)one.x) * abs((float)two.y - (float)one.y);
+
+	return sqrt(x2 + y2);
+}
+
 void Grid::setCellFlag(int x, int y, int flagValue)
 {
 	cellGrid[y][x].distance = flagValue;
@@ -111,16 +139,6 @@ void Grid::setCellFlag(int x, int y, int flagValue)
 int Grid::getCellFlag(int x, int y)
 {
 	return cellGrid[y][x].distance;
-}
-
-void Grid::setNodeFlag(int x, int y, int flagValue)
-{
-	nodeGrid[y][x].distance = flagValue;
-}
-
-int Grid::getNodeFlag(int x, int y)
-{
-	return nodeGrid[y][x].distance;
 }
 
 int Grid::getGridWidth()

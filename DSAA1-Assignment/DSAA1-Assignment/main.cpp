@@ -1,4 +1,5 @@
 //@BridgetACasey
+
 #include "pch.h"
 #include <SFML/Graphics.hpp>
 
@@ -23,6 +24,7 @@ int main()
 	dijkstra.setGrid(&grid);
 	astar.setGrid(&grid);
 
+	grid.setEightDirections(false);
 	grid.populate();
 
 	astar.flood();

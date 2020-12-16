@@ -27,18 +27,13 @@ class AStar
 {
 public:
 	AStar();
-	~AStar();
 
 	void setGrid(Grid* gd);
 
 	void flood();
 	void trace();
 
-	int distanceBetween(Coordinate one, Coordinate two);
-
 private:
-	orderByMinF order;
-
 	std::list<Coordinate> path;
 
 	std::set<Node*, orderByMinF> openSet;

@@ -19,8 +19,8 @@ struct Node
 {
 	bool visited = false;
 
-	int cost = 1;
-	int distance = -1;
+	float cost = 1;
+	float distance = -1;
 
 	int f = 0;	//Sum of g and h, which is an estimate of total path length
 	int g = 0;	//Accumulated cost from start node to current node
@@ -42,14 +42,15 @@ public:
 	void setNodeNeighbours();
 	void populateNodeArray();
 
-	void renderCellGrid();
 	void renderNodeGrid();
+
+	void setEightDirections(bool directions);
 
 	void setCellFlag(int x, int y, int flagValue);
 	int getCellFlag(int x, int y);
 
-	void setNodeFlag(int x, int y, int flagValue);
-	int getNodeFlag(int x, int y);
+	float calculateManhattan(Coordinate one, Coordinate two);
+	float calculateEuclidean(Coordinate one, Coordinate two);
 
 	int getGridWidth();
 	int getGridHeight();
@@ -63,4 +64,6 @@ private:
 	Cell cellGrid[HEIGHT][WIDTH] = {};
 
 	Node** nodeGrid;
+
+	bool eightDirections = false;
 };

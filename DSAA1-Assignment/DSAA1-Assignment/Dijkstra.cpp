@@ -1,16 +1,9 @@
 //@BridgetACasey
+
 #include "pch.h"
 #include "Dijkstra.h"
 
 //Functor - Used for the queue comparison.
-struct VertexMax
-{
-	bool operator() (const Vertex* v1, const Vertex* v2) const
-	{
-		return (v1->distance > v2->distance);
-	}
-};
-
 struct NodeMax
 {
 	bool operator() (const Node* node1, const Node* node2) const
@@ -25,11 +18,6 @@ Dijkstra::Dijkstra()
 
 	startNode = nullptr;
 	endNode = nullptr;
-}
-
-Dijkstra::~Dijkstra()
-{
-
 }
 
 void Dijkstra::setGrid(Grid* gd)
@@ -107,6 +95,4 @@ void Dijkstra::trace()
 
 		currentNode = nextNode;
 	}
-
-	endNode->distance = -5;
 }

@@ -9,7 +9,6 @@ class Dijkstra
 {
 public:
 	Dijkstra();
-	~Dijkstra();
 
 	void setGrid(Grid* gd);
 

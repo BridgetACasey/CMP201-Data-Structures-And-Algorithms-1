@@ -11,11 +11,6 @@ AStar::AStar()
 	endNode = nullptr;
 }
 
-AStar::~AStar()
-{
-
-}
-
 void AStar::setGrid(Grid* gd)
 {
 	grid = gd;
@@ -28,11 +23,12 @@ void AStar::flood()
 
 	Node* currentNode = startNode;
 
-	bool found = false;
-
 	startNode->distance = 0;
 	startNode->g = 0;
-	startNode->f = startNode->g + distanceBetween(startNode->coordinate, endNode->coordinate) + 1;	//Adding 1, otherwise f value is the same as its neighbours and it never gets added to the closed set
+
+	//startNode->f = startNode->g + grid->calculateManhattan(startNode->coordinate, endNode->coordinate) + 1;
+	startNode->f = startNode->g + grid->calculateEuclidean(startNode->coordinate, endNode->coordinate) + 1;
+	//Adding 1, otherwise f value is the same as its neighbours and it never gets added to the closed set
 
 	openSet.insert(currentNode);
 
@@ -40,9 +36,7 @@ void AStar::flood()
 	{
 		if (currentNode == endNode)
 		{
-			found = true;
-			std::cout << "FOUND!1!" << std::endl;
-			endNode->distance = -5;
+			std::cout << "FOUND!" << std::endl;
 			break;
 		}
 
@@ -61,11 +55,16 @@ void AStar::flood()
 			{
 				if (neighbour->distance != -2)
 				{
-					neighbour->h = distanceBetween(neighbour->coordinate, endNode->coordinate);
-					neighbour->g = neighbour->g + distanceBetween(neighbour->coordinate, neighbour->parent->coordinate);
+					//neighbour->h = grid->calculateManhattan(neighbour->coordinate, endNode->coordinate);
+					neighbour->h = grid->calculateEuclidean(neighbour->coordinate, endNode->coordinate);
+
+					//neighbour->g = neighbour->g + grid->calculateManhattan(neighbour->coordinate, neighbour->parent->coordinate);
+					neighbour->g = neighbour->g + grid->calculateEuclidean(neighbour->coordinate, neighbour->parent->coordinate);
+
 					neighbour->f = neighbour->g + neighbour->h;
 
-					neighbour->distance = distanceBetween(neighbour->coordinate, startNode->coordinate);
+					//neighbour->distance = grid->calculateManhattan(neighbour->coordinate, startNode->coordinate);
+					neighbour->distance = grid->calculateEuclidean(neighbour->coordinate, startNode->coordinate);
 
 					openSet.insert(neighbour);
 				}
@@ -80,8 +79,6 @@ void AStar::trace()
 	{
 		path.push_back(current->coordinate);
 
-		current->distance = -4;
-
 		current = current->parent;
 	}
 
@@ -89,9 +86,4 @@ void AStar::trace()
 	{
 		std::cout << "Coord: " << coord.x << " " << coord.y << std::endl;
 	}
-}
-
-int AStar::distanceBetween(Coordinate one, Coordinate two)
-{
-	return(abs(two.x - one.x) + abs(two.y - one.y));
 }
